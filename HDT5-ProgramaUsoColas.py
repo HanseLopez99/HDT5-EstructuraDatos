@@ -4,19 +4,10 @@
 
 import simpy
 import random
+import math
 import matplotlib.pyplot as plt
 
 lista = []
-
-def appendLista(elemento):
-    lista.append(elemento)
-
-def desplegarGrafica(lista):
-    plt.plot(lista)
-    plt.title("Grafica Tiempo/Procesos")
-    plt.xlabel("Processes")
-    plt.ylabel("Time(Units of time)")
-    plt.show()
 
 def main():
     env = simpy.Environment()
@@ -30,8 +21,55 @@ def main():
     numberOfInstructions = 0
     env.process(source(env, totalProcesses, creationInterval, processor, RAM))
     env.run()
-    desplegarGrafica(lista)
+    media = promedio(lista)
+    print("")
+    print("La media es: ")
+    print(media)
+    print("")
+    desvest = desviacionStandar(lista, media)
+    print("La desviacion estandar es: ")
+    print(desvest)
+    print("")
     print("-Simulation Complete!")
+    desplegarGrafica(lista)
+
+def appendLista(elemento):
+    lista.append(elemento)
+
+def desplegarGrafica(lista):
+    plt.plot(lista)
+    plt.title("Grafica Tiempo/Procesos")
+    plt.xlabel("Processes")
+    plt.ylabel("Time(Units of time)")
+    plt.show()
+
+def promedio(lista):  
+    sumatoria = 0
+    for numero in lista:
+        sumatoria+=numero #Esta parte suma todos los elementos de la lista
+        
+    cantidad = len(lista) #Esta parte cuenta los elementos de la lista
+    
+    resultado = sumatoria/float(cantidad) #Eta parte aplica la formula de promedio
+    resultado = round(resultado, 3)
+    return (resultado)
+
+def desviacionStandar(lista,media):
+    lista2 = []
+    sumatoria = 0
+    n = len(lista)
+    for numero in lista:
+        parentesis = numero-media
+        elemento = parentesis*parentesis
+        lista2.append(elemento)
+        numero = numero+1
+    cantidad = len(lista)-1
+    for i in lista2:
+        sumatoria = sumatoria + i
+    division = sumatoria/n
+    resultado = math.sqrt(division)
+    resultado = round(resultado,3)
+    return resultado
     
 def source(env, totalProcesses, interval, processor, ram):
     for n in range(totalProcesses):
