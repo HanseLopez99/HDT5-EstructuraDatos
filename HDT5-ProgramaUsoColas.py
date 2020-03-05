@@ -22,12 +22,13 @@ def source(env, number, interval, processor, ram):
     for n in range(number):
         memoria = random.randint(1,10)  
         ram.get(memoria)
-        proc = processorSimulation(env, 'Process%02d status' % n, processor, processorCapacity=1.0, ram=memoria)
+        proc = processorSimulation(env, 'Process%02d status' % n, processor, processorCapacity=1.0)
+        ram.put(memoria)
         env.process(proc)
         time = random.expovariate(1.0 / interval)
         yield env.timeout(time)   
 
-def processorSimulation(env, name, processor, processorCapacity, ram):
+def processorSimulation(env, name, processor, processorCapacity):
     
     arrive = env.now
     print('%7.2f %s: Starting process...' % (arrive, name))
@@ -39,15 +40,13 @@ def processorSimulation(env, name, processor, processorCapacity, ram):
         wait = env.now - arrive
 
         if req in results:
-            # We got to the counter
             print('%7.2f %s: Waited  %6.2f' % (env.now, name, wait))
 
-            tib = random.expovariate(1.0 / processorCapacity)
-            yield env.timeout(tib)
+            time = random.expovariate(1.0 / processorCapacity)
+            yield env.timeout(time)
             print('%7.2f %s: Finished' % (env.now, name))
-
+            
         else:
-            # We reneged
             print('%7.4f %s: RENEGED after %6.2f' % (env.now, name, wait))
 
         
