@@ -22,12 +22,12 @@ def source(env, number, interval, processor, ram):
     for n in range(number):
         memoria = random.randint(1,10)  
         ram.get(memoria)
-        proc = processorSimulation(env, 'Process%02d' % n, processor, processorCapacity=3.0)
+        proc = processorSimulation(env, 'Process%02d' % n, processor, processorCapacity=3.0, ram=memoria)
         env.process(proc)
         time = random.expovariate(1.0 / interval)
         yield env.timeout(time)   
 
-def processorSimulation(env, name, processor, processorCapacity):
+def processorSimulation(env, name, processor, processorCapacity, ram):
     
     arrive = env.now
     print('%7.2f %s: Starting process...' % (arrive, name))
