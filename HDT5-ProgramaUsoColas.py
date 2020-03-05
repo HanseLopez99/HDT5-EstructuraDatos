@@ -13,16 +13,15 @@ def main():
     RAM = simpy.Container(env, init=100, capacity=100)
     totalProcesses = 25
     creationInterval = 10.0
-
-
-    
-    env.process(source(env, totalProcesses, creationInterval, processor))
+    memoria = 0 
+    env.process(source(env, totalProcesses, creationInterval, processor, ram))
     env.run()
     print("-Simulation Complete!")
     
-def source(env, number, interval, processor):
+def source(env, number, interval, processor, ram):
     for n in range(number):
-
+        memoria = random.randint(1,10)  
+        ram.get(memoria)
         proc = processorSimulation(env, 'Process%02d' % n, processor, processorCapacity=3.0)
         env.process(proc)
         time = random.expovariate(1.0 / interval)
