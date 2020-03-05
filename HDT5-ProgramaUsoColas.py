@@ -14,7 +14,7 @@ def main():
     totalProcesses = 25
     creationInterval = 10.0
     memoria = 0 
-    env.process(source(env, totalProcesses, creationInterval, processor, ram))
+    env.process(source(env, totalProcesses, creationInterval, processor, RAM))
     env.run()
     print("-Simulation Complete!")
     
