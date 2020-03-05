@@ -8,14 +8,15 @@ import matplotlib.pyplot as plt
 
 lista = []
 
-def desplegarGrafica(elemento, totalProcesses):
+def appendLista(elemento):
     lista.append(elemento)
-    if(len(lista)==totalProcesses):
-        plt.plot(lista)
-        plt.title("Grafica Tiempo/Procesos")
-        plt.xlabel("Processes")
-        plt.ylabel("Time(Units of time)")
-        plt.show()
+
+def desplegarGrafica(lista):
+    plt.plot(lista)
+    plt.title("Grafica Tiempo/Procesos")
+    plt.xlabel("Processes")
+    plt.ylabel("Time(Units of time)")
+    plt.show()
 
 def main():
     env = simpy.Environment()
@@ -29,6 +30,7 @@ def main():
     numberOfInstructions = 0
     env.process(source(env, totalProcesses, creationInterval, processor, RAM))
     env.run()
+    desplegarGrafica(lista)
     print("-Simulation Complete!")
     
 def source(env, totalProcesses, interval, processor, ram):
@@ -58,7 +60,7 @@ def processorSimulation(env, name, processor, totalProcesses, processorCapacity)
             time = random.expovariate(1.0 / processorCapacity)
             yield env.timeout(time)
             print('%7.2f %s: Finished' % (env.now, name)) 
-            desplegarGrafica(env.now, totalProcesses)         
+            appendLista(env.now)         
         else:
             print('%7.4f %s: RENEGED after %6.2f' % (env.now, name, wait))
 
