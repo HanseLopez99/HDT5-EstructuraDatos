@@ -4,9 +4,12 @@
 
 import simpy
 import random
+#import matplotlib.pyplot as plt
+
 
 def main():
     env = simpy.Environment()
+    
     RANDOM_SEED = 40
     random.seed(RANDOM_SEED)
     processor = simpy.Resource(env, capacity=2)
