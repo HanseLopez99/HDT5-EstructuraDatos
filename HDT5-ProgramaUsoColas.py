@@ -14,7 +14,7 @@ def desplegarGrafica(elemento, totalProcesses):
         plt.plot(lista)
         plt.title("Grafica Tiempo/Procesos")
         plt.xlabel("Processes")
-        plt.ylabel("Time")
+        plt.ylabel("Time(Units of time)")
         plt.show()
 
 def main():
@@ -45,7 +45,7 @@ def source(env, totalProcesses, interval, processor, ram):
 def processorSimulation(env, name, processor, totalProcesses, processorCapacity):
     
     arrive = env.now
-    print('%7.2f %s: Starting process...' % (arrive, name))
+    print('%7.2f %s: Ready to start' % (arrive, name))
 
     with processor.request() as req:
         patience = random.uniform(1, 3)
