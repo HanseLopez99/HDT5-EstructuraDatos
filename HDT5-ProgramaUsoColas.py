@@ -4,12 +4,21 @@
 
 import simpy
 import random
-#import matplotlib.pyplot as plt
+import matplotlib.pyplot as plt
 
+lista = []
+
+def desplegarGrafica(elemento, totalProcesses):
+    lista.append(elemento)
+    if(len(lista)==totalProcesses):
+        plt.plot(lista)
+        plt.title("Grafica Tiempo/Procesos")
+        plt.xlabel("Processes")
+        plt.ylabel("Time")
+        plt.show()
 
 def main():
     env = simpy.Environment()
-    
     RANDOM_SEED = 40
     random.seed(RANDOM_SEED)
     processor = simpy.Resource(env, capacity=2)
@@ -22,18 +31,18 @@ def main():
     env.run()
     print("-Simulation Complete!")
     
-def source(env, number, interval, processor, ram):
-    for n in range(number):
+def source(env, totalProcesses, interval, processor, ram):
+    for n in range(totalProcesses):
         memory = random.randint(1,10)  
         numberOfInstructions = random.randint(1,10)
         ram.get(memory)
-        proc = processorSimulation(env, 'Process%02d status' % n, processor, processorCapacity=1.0)
+        proc = processorSimulation(env, 'Process%02d status' % n, processor, totalProcesses, processorCapacity=1.0)
         ram.put(memory)
         env.process(proc)
         time = random.expovariate(1.0 / interval)
         yield env.timeout(time)   
 
-def processorSimulation(env, name, processor, processorCapacity):
+def processorSimulation(env, name, processor, totalProcesses, processorCapacity):
     
     arrive = env.now
     print('%7.2f %s: Starting process...' % (arrive, name))
@@ -48,9 +57,12 @@ def processorSimulation(env, name, processor, processorCapacity):
             print('%7.2f %s: Waited  %6.2f' % (env.now, name, wait))
             time = random.expovariate(1.0 / processorCapacity)
             yield env.timeout(time)
-            print('%7.2f %s: Finished' % (env.now, name))           
+            print('%7.2f %s: Finished' % (env.now, name)) 
+            desplegarGrafica(env.now, totalProcesses)         
         else:
             print('%7.4f %s: RENEGED after %6.2f' % (env.now, name, wait))
+
+
 
 if __name__ == '__main__':
     main()
